@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 
 // files
-const salesRoutes = require("../routes/salesRoutes")
-const customerRoutes = require("../routes/customerRoutes")
+const salesRoutes = require("./salesRoutes")
+const customerRoutes = require("./customerRoutes")
 
 // middleware
 app.use("/sales", salesRoutes)

@@ -10,7 +10,8 @@ const apiRoutes = require("./routes/apiRoutes");
 const app = express();
 const PORT = 4000;
 const whitelist = [
-    
+    "https://web.postman.co/",
+    "https://web.postman.co"
 ];
 
 const corsoptions = {
@@ -33,6 +34,6 @@ app.use(express.json());
 app.use(apiRoutes);
 
 // connect
-connectDB();
+// connectDB();
 
 app.listen(PORT)
