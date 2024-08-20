@@ -1,17 +1,13 @@
 // variables
 const express = require("express");
 const app = express();
+
 // files
-// const categoryRoutes = require("./categoryRoutes");
-// const postRoutes = require("./postRoutes");
-// const spaceRoutes = require("./spaceRoutes");
-// const userRoutes = require("./userRoutes");
+const salesRoutes = require("../routes/salesRoutes")
+const customerRoutes = require("../routes/customerRoutes")
 
-
-
-// app.use("/categories", categoryRoutes);
-// app.use("/posts", postRoutes);
-// app.use("/spaces", spaceRoutes);
-// app.use("/users", userRoutes);
+// middleware
+app.use("/sales", salesRoutes)
+app.use("/customers", customerRoutes)
 
 module.exports = app;
