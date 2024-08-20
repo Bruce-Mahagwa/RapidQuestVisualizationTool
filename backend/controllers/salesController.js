@@ -15,7 +15,6 @@ const getSalesOverTime = async (req, res) => {
             // projection: {_id: 0, total_price_set: 1, created_at: 1} // includes only total_price_set and created_at fields
             projection: {_id: 0, total_price_set: {shop_money: 1}, created_at: 1} // includes only total_price_set and created_at fields
          }
-
          const data = [];
 
         // daily interval
@@ -26,25 +25,56 @@ const getSalesOverTime = async (req, res) => {
                 await total_price_set.forEach((item) => {
                     data.push(item);
                 })
-                return res.status(200).json({data})
+                return res.status(200).json({data, period: "daily"})
             }
             catch(e) {
                 console.log(e)
                 return res.status(500).json({error: "Could not retrieve data for daily sales"})
             }
         }
-        // monthly interval
-        const monthly = req?.params?.monthly
-        if (monthly) {
 
+        // monthly interval
+        const monthly = req?.query?.monthly
+        if (monthly) {
+            try {
+                const monthly_price_set = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: { month: { 
+                                $month: {
+                                    $toDate: "$created_at"
+                                }
+                            },
+                             year: {
+                                 $year: {
+                                    $toDate: "$created_at"
+                                }
+                                }
+                            },
+                            total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                        },
+                    },
+                    {$sort:{"_id.year":1, "_id.month":1}}
+                ])
+
+                await monthly_price_set.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "monthly"})
+            }
+            catch(e) {
+                console.log(e)
+                return res.status(500).json({error: "Could not retrieve data for monthly sales"})
+            }
         }
+        
         // quarterly interval
-        const quarterly = req?.params?.quarterly
+        const quarterly = req?.query?.quarterly
         if (quarterly) {
 
         }
         // yearly interval
-        const yearly = req?.params?.yearly
+        const yearly = req?.query?.yearly
         if (yearly) {
 
         }
