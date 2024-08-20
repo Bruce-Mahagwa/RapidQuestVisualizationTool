@@ -6,7 +6,7 @@ const MONGO_URI = "mongodb+srv://db_user_read:LdmrVA5EDEv4z3Wr@cluster0.n10ox.mo
 
 const connectDB = async () => {
   try {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(MONGO_URI);
     // await mongoose.connect(MONGO_URI);
     await client.connect();
     console.log("connected to mongodb");

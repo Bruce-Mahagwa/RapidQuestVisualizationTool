@@ -1,23 +1,53 @@
+// dependencies
+const { MongoClient } = require("mongodb");
 // variables
-const mongoose = require("mongoose")
-// functions
-const connectDB = require("../config/db");
+const MONGO_URI = "mongodb+srv://db_user_read:LdmrVA5EDEv4z3Wr@cluster0.n10ox.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+const client = new MongoClient(MONGO_URI);
 
 const getSalesOverTime = async (req, res) => {
     try {
-        const client = await connectDB()
-        const db = client.db("RQ_Analytics")
-        console.log(db, "rq")
-        const colleciton = db.collection("shopifyOrders");
-        console.log(collection, "collection")
-        const documents = await collection.find({}).count()
-        console.log(documents, "documents")
-            //     connection.on("connected", async () => {
-            // console.log("open")
-            // const total_sales_collection =  connection.db.collection("shopifyOrders");
-            // const cursor = await total_sales_collection.find({}).limit(3);
-            // return res.json({cursor: cursor})
-        // })
+        await client.connect();
+        const database = client.db("RQ_Analytics")
+        const collection = database.collection("shopifyOrders");
+        const options = {
+            sort: {"created_at": 1}, // sorts in ascending order
+            // projection: {_id: 0, total_price_set: 1, created_at: 1} // includes only total_price_set and created_at fields
+            projection: {_id: 0, total_price_set: {shop_money: 1}, created_at: 1} // includes only total_price_set and created_at fields
+         }
+
+         const data = [];
+
+        // daily interval
+        const daily = req?.query?.daily
+        if (daily) {
+            try {
+                const total_price_set = await collection.find({}, options).limit(2)
+                await total_price_set.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data})
+            }
+            catch(e) {
+                console.log(e)
+                return res.status(500).json({error: "Could not retrieve data for daily sales"})
+            }
+        }
+        // monthly interval
+        const monthly = req?.params?.monthly
+        if (monthly) {
+
+        }
+        // quarterly interval
+        const quarterly = req?.params?.quarterly
+        if (quarterly) {
+
+        }
+        // yearly interval
+        const yearly = req?.params?.yearly
+        if (yearly) {
+
+        }
     }    
     catch(e) {
         console.log(e, "getSalesOverTime")
