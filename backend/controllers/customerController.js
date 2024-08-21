@@ -342,11 +342,18 @@ const getGeographicalDistribution = async (req, res) => {
     try {
         await client.connect();
         const database = client.db("RQ_Analytics")
-        const collection = database.collection("shopifyCustomers")
+        const collection = database.collection("shopifyOrders")
         // get cities of customers
         const data = [];
+        const options = {
+            projection: {"customer.default_address.city": 1, _id: 0} 
+        }
         try {
-
+            const cities = await collection.find({}, options)
+            await cities.forEach((item) => {
+                data.push(item.customer.default_address.city);
+            })
+            return res.status(200).json({data, value:"cities"});
         }
         catch(e) {
             console.log(e);
@@ -360,4 +367,14 @@ const getGeographicalDistribution = async (req, res) => {
     }
 }
 
-module.exports = {getNewCustomers, repeatPurchases, getGeographicalDistribution}
+const cohortValue = async (req, res) => {
+    try {
+
+    }
+    catch(e) {
+        console.log(e);
+        return res.status(500).json({error: "Cannot group customers by cohort"})
+    }
+}
+module.exports = {getNewCustomers, repeatPurchases, getGeographicalDistribution, cohortValue}
+ 

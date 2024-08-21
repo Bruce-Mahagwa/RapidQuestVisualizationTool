@@ -152,6 +152,4 @@ const getSalesOverTime = async (req, res) => {
     }
 }
 
-
-
 module.exports = {getSalesOverTime}
