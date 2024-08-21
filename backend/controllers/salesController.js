@@ -21,8 +21,32 @@ const getSalesOverTime = async (req, res) => {
         const daily = req?.query?.daily
         if (daily) {
             try {
-                const total_price_set = await collection.find({}, options).limit(2)
-                await total_price_set.forEach((item) => {
+                const daily_price_set = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: { month: { 
+                                $month: {
+                                    $toDate: "$created_at"
+                                }
+                            },
+                             year: {
+                                 $year: {
+                                    $toDate: "$created_at"
+                                }
+                             },
+                             day: {
+                                $dayOfMonth: {
+                                    $toDate: "$created_at"
+                                }
+                             }
+                            },
+                            total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                        },
+                    },
+                    {$sort:{"_id.year":1, "_id.month":1, "_id.day": 1}}
+                ])
+
+                await daily_price_set.forEach((item) => {
                     data.push(item);
                 })
                 return res.status(200).json({data, period: "daily"})
@@ -79,7 +103,6 @@ const getSalesOverTime = async (req, res) => {
                             total_cost_quarterly: { $sum: {$toDouble: "$total_price_set.shop_money.amount"} }
                         }
                     },
-                    // {$sort:{"_id.date":1}}
                 ]).sort({"_id": 1})
                 await quarterly_price_set.forEach((item) => {
                     data.push(item);
@@ -94,12 +117,40 @@ const getSalesOverTime = async (req, res) => {
         // yearly interval
         const yearly = req?.query?.yearly
         if (yearly) {
-
+            try {
+                const yearly_price_set = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: {
+                             year: {
+                                 $year: {
+                                    $toDate: "$created_at"
+                                }
+                            }
+                        },
+                        total_cost_yearly: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                        },
+                    },
+                    {$sort:{"_id.year":1}}
+                ])
+                await yearly_price_set.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "yearly"})
+            }
+            catch(e) {
+                console.log(e);
+                return res.status(500).json({error: "Could not retrieve data for yearly sales"})
+            }
         }
+        return res.status(200).json({data, period: "NO PERIOD SPECIFIED"})
     }    
     catch(e) {
-        console.log(e, "getSalesOverTime")
+        console.log(e);
+        return res.status(500).json({error: "We have encountered an internal error. Please reload the page."})
     }
 }
+
+
 
 module.exports = {getSalesOverTime}
