@@ -20,21 +20,22 @@ const getNewCustomers = async (req, res) => {
                 const daily_registration = await collection.aggregate([
                     {
                         $group: {
-                            _id: { month: { 
-                                $month: {
-                                    $toDate: "$created_at"
-                                }
+                            _id: { 
+                                month: { 
+                                    $month: {
+                                        $toDate: "$created_at"
+                                    }
                             },
-                             year: {
-                                 $year: {
-                                    $toDate: "$created_at"
+                                year: {
+                                    $year: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                day: {
+                                    $dayOfMonth: {
+                                        $toDate: "$created_at"
+                                    }
                                 }
-                             },
-                             day: {
-                                $dayOfMonth: {
-                                    $toDate: "$created_at"
-                                }
-                             }
                             },
                             total_registration_daily: { $sum: 1}
                         },
@@ -138,4 +139,225 @@ const getNewCustomers = async (req, res) => {
     }
 }
 
-module.exports = {getNewCustomers}
+
+const repeatPurchases = async (req, res) => {
+    try {
+        await client.connect();
+        const database = client.db("RQ_Analytics")
+        const collection = database.collection("shopifyOrders")
+        // get customers with repeated purchases
+        const data = [];
+        // days
+        const daily = req?.query?.daily;
+        if (daily) {
+            try {
+                const daily_repeated_purchases = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: { 
+                                month: { 
+                                    $month: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                year: {
+                                    $year: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                day: {
+                                    $dayOfMonth: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                id: "$customer.id"
+                            },
+                            count: { $sum: 1 }
+                        },                        
+                    },
+                    {
+                        $match: {
+                            "_id.id" :{ $ne : null },
+                             count : {$gt: 1}
+                        }
+                    },
+                    {
+                        $project: {name: "$_id", count: "$count", _id: 0}
+                    },
+
+                    {$sort:{"_id.year":1, "_id.month":1, "_id.day": 1}}
+                ])
+
+                await daily_repeated_purchases.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "daily"})
+        }
+        catch(e) {
+            console.log(e);
+            return res.status(500).json({error: "Cannot retrieve daily repeated purchases"})
+        }
+    }
+
+        //monthly
+        const monthly = req?.query?.monthly;
+        if (monthly) {
+            try {
+                const monthly_repeated_purchases = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: { 
+                                month: { 
+                                    $month: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                year: {
+                                    $year: {
+                                        $toDate: "$created_at"
+                                    }
+                                },                                
+                                id: "$customer.id"
+                            },
+                            count: { $sum: 1 }
+                        },                        
+                    },
+                    {
+                        $match: {
+                            "_id.id" :{ $ne : null },
+                             count : {$gt: 1}
+                        }
+                    },
+                    {
+                        $project: {name: "$_id", count: "$count", _id: 0}
+                    },
+
+                    {$sort:{"_id.year":1, "_id.month":1}}
+                ])
+
+                await monthly_repeated_purchases.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "monthly"})
+            }
+            catch(e) {
+                console.log(e);
+                return res.status(500).json({error: "Cannot retrieve monthly repeated purchases"})
+            }
+        } 
+
+        //quarterly
+        const quarterly = req?.query?.quarterly;
+        if (quarterly) {
+            try {
+                const quarterly_repeated_purchases = await collection.aggregate([
+                    { 
+                        $group: {
+                            _id: {
+                                value: { 
+                                    $dateTrunc: { 
+                                        date: {
+                                            $toDate: "$created_at"
+                                        }, 
+                                        unit: "quarter" 
+                                    },
+                                },
+                                id: "$customer.id",
+                            },
+                            count: {$sum: 1}
+                        }
+                    },
+                    {
+                        $match: {
+                            "_id.id" :{ $ne : null },
+                             count : {$gt: 1}
+                        }
+                    },
+                    {
+                        $project: {name: "$_id", count: "$count", _id: 0}
+                    }
+                ]).sort({"name.value": 1})
+
+                await quarterly_repeated_purchases.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "quarterly"})   
+            }
+            catch(e) {
+                console.log(e);
+                return res.status(500).json({error: "Cannot retrieve quarterly repeated purchases"})
+            }
+        }
+
+        //yearly
+        const yearly = req?.query?.yearly;
+        if (yearly) {
+            try {
+                const yearly_repeated_purchases = await collection.aggregate([
+                    {
+                        $group: {
+                            _id: {                                 
+                                year: {
+                                    $year: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                id: "$customer.id"
+                            },
+                            count: { $sum: 1 }
+                        },                        
+                    },
+                    {
+                        $match: {
+                            "_id.id" :{ $ne : null },
+                             count : {$gt: 1}
+                        }
+                    },
+                    {
+                        $project: {name: "$_id", count: "$count", _id: 0}
+                    },
+
+                    {$sort:{"_id.year":1}}
+                ])
+
+                await yearly_repeated_purchases.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "yearly"})
+            }
+            catch(e) {
+                console.log(e);
+                return res.status(500).json({error: "Cannot retrieve yearly repeated purchases"})
+            }
+        }
+        return data;
+    }
+    catch(e) {
+        console.log(e);
+        return res.status(500).json({error: "Cannot retrieve customers with repeat purchases now"})
+    }
+}
+
+const getGeographicalDistribution = async (req, res) => {
+    try {
+        await client.connect();
+        const database = client.db("RQ_Analytics")
+        const collection = database.collection("shopifyCustomers")
+        // get cities of customers
+        const data = [];
+        try {
+
+        }
+        catch(e) {
+            console.log(e);
+            return res.status(500).json({error: "Cannot find customer city"})
+        }
+        
+    }
+    catch(e) {
+        console.log(e);
+        return res.status(500).json({error: "Cannot find geographical distribution of customers"})
+    }
+}
+
+module.exports = {getNewCustomers, repeatPurchases, getGeographicalDistribution}

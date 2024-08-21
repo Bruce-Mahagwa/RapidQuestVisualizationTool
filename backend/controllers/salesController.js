@@ -64,18 +64,19 @@ const getSalesOverTime = async (req, res) => {
                 const monthly_price_set = await collection.aggregate([
                     {
                         $group: {
-                            _id: { month: { 
-                                $month: {
-                                    $toDate: "$created_at"
+                            _id: { 
+                                month: { 
+                                    $month: {
+                                        $toDate: "$created_at"
+                                    }
+                                },
+                                year: {
+                                    $year: {
+                                        $toDate: "$created_at"
+                                    }
                                 }
-                            },
-                             year: {
-                                 $year: {
-                                    $toDate: "$created_at"
-                                }
-                                }
-                            },
-                            total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                                },
+                                total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
                         },
                     },
                     {$sort:{"_id.year":1, "_id.month":1}}
