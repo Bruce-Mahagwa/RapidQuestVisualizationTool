@@ -12,9 +12,9 @@ const getSalesOverTime = async (req, res) => {
         const collection = database.collection("shopifyOrders");
         const options = {
             sort: {"created_at": 1}, // sorts in ascending order
-            // projection: {_id: 0, total_price_set: 1, created_at: 1} // includes only total_price_set and created_at fields
             projection: {_id: 0, total_price_set: {shop_money: 1}, created_at: 1} // includes only total_price_set and created_at fields
          }
+         
          const data = [];
 
         // daily interval
@@ -67,11 +67,29 @@ const getSalesOverTime = async (req, res) => {
                 return res.status(500).json({error: "Could not retrieve data for monthly sales"})
             }
         }
-        
+
         // quarterly interval
         const quarterly = req?.query?.quarterly
         if (quarterly) {
-
+            try {
+                const quarterly_price_set = await collection.aggregate([
+                    { 
+                        $group: {
+                            _id: { $dateTrunc: { date: {$toDate: "$created_at"}, unit: "quarter" }},
+                            total_cost_quarterly: { $sum: {$toDouble: "$total_price_set.shop_money.amount"} }
+                        }
+                    },
+                    // {$sort:{"_id.date":1}}
+                ]).sort({"_id": 1})
+                await quarterly_price_set.forEach((item) => {
+                    data.push(item);
+                })
+                return res.status(200).json({data, period: "quarterly"})
+            }
+            catch(e) {
+                console.log(e);
+                return res.status(500).json({error: "Could not retrieve data for quarterly sales"})
+            }    
         }
         // yearly interval
         const yearly = req?.query?.yearly
