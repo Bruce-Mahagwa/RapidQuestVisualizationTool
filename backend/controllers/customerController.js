@@ -1,5 +1,6 @@
 // dependencies
 const { MongoClient } = require("mongodb");
+const Long = require('mongodb').Long;
 // variables
 const MONGO_URI = "mongodb+srv://db_user_read:LdmrVA5EDEv4z3Wr@cluster0.n10ox.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -131,7 +132,7 @@ const getNewCustomers = async (req, res) => {
             }
         }
 
-        return data;
+        return data; 
     }
     catch(e) {
         console.log(e);
@@ -369,7 +370,48 @@ const getGeographicalDistribution = async (req, res) => {
 
 const cohortValue = async (req, res) => {
     try {
+        await client.connect();
+        const database = client.db("RQ_Analytics")
+        const collection = database.collection("shopifyOrders");
 
+        const data_obj = {
+
+        }
+        const options = {"customer.id": 1, "created_at": 1, "total_price_set.shop_money.amount": 1} 
+
+        const customer_ids = await collection.find({}).project(options).sort({"created_at": 1})
+
+        await customer_ids.forEach((item) => {
+            const product_long_id = String(new Long(item._id.low, item._id.high, item._id.unsigned));
+            const customer_long_id = String(new Long(item.customer.id.low, item.customer.id.high, item.customer.id.unsigned));
+            const date_created =  item.created_at
+            const date_created_string = date_created.toString()
+            const month_created =  new Date(item.created_at).getMonth()
+            const price_of_product =  Number(item.total_price_set.shop_money.amount)
+            
+            if (data_obj[customer_long_id]) {
+                data_obj[customer_long_id][date_created_string] = {
+                    product_long_id: product_long_id,
+                    customer_long_id: customer_long_id,
+                    date_created: date_created,
+                    month_created: month_created,
+                    price_of_product: price_of_product
+                }
+            }
+            else {
+                data_obj[customer_long_id] = {
+                    [date_created_string]: {
+                        product_long_id: product_long_id,
+                        customer_long_id: customer_long_id,
+                        date_created: date_created,
+                        month_created: month_created,
+                        price_of_product: price_of_product
+                    }
+                }
+            }
+            
+        })
+        return res.status(200).json({ data: data_obj})
     }
     catch(e) {
         console.log(e);
