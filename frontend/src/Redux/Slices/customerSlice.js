@@ -1,5 +1,5 @@
  // dependencies
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isRejected } from '@reduxjs/toolkit';
 // functions
 import { getGeographicalDistribution } from '../Actions/customerActions';
 import { getCohortValue } from '../Actions/customerActions';
@@ -27,7 +27,47 @@ const customerSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-
+        builder.addCase(getNewCustomers.fulfilled, (state, action) => {
+            const {data, period} = action.payload.data
+            if (period === "daily") {
+                data.map((item) => {
+                    const obj = {
+                        total_registration_daily: item.total_registration_daily,
+                        date: `${item._id.year}-${item._id.month}-${item._id.day}`
+                    }
+                    state.new_customers.daily.push(obj)
+                })
+                state.new_customers.period = period;
+                state.new_customers.loading = false;
+            }
+            else if (period === "monthly") {
+                data.map((item) => {
+                    const obj = {
+                        total_registration_monthly: item.total_registration_monthly,
+                        date: `${item._id.year}-${item._id.month}`
+                    }
+                    state.new_customers.monthly.push(obj)
+                })
+                state.new_customers.period = period;
+                state.new_customers.loading = false;
+            }
+            else if (period === "weekly") {
+                data.map((item) => {
+                    const obj = {
+                        total_registration_weekly: item.total_registration_weekly,
+                        date: `${item._id.year}-${item._id.month}-${item._id.week}`
+                    }
+                    state.new_customers.weekly.push(obj)
+                })
+                state.new_customers.period = period;
+                state.new_customers.loading = false;
+            }
+        }).addCase(getNewCustomers.rejected, (state, action) => {
+            state.new_customers.error = action.payload;
+            state.new_customers.loading = false;
+        }).addCase(getNewCustomers.pending, (state, action) => {
+            state.new_customers.loading = true;
+        })
     }
 })
 

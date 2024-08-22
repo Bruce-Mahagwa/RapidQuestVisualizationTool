@@ -117,7 +117,7 @@ const SalesOverTime = () => {
                 <Loading />
             </div>}
             {error && <div className = "error">
-                <h1>{error}</h1>    
+                <h1>`${error}. Please reload page`</h1>        
             </div>}
             {localError && <div className = "error">
                 <h1>We have encountered a local error. Please reload the Page.</h1>
@@ -126,10 +126,10 @@ const SalesOverTime = () => {
 
             {!loading && period && <div className = "graph">
             
-            <LineChart width={window.innerWidth- 20} height={400} data={total_sales[selectedPeriod]}
+            <LineChart width={1000} height={400} data={total_sales[selectedPeriod]}
                 >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
