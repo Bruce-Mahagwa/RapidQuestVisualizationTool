@@ -22,6 +22,13 @@ const NewCustomers = () => {
     // search params
     const [granularity, setGranularity] = useSearchParams();
 
+
+    function add_class(data_name) {
+        // adds the class btn_active to a granularity button when a user refreshed the page
+        const element = document.querySelector(`[data-name=${data_name}]`);
+        element?.classList?.add("btn_active")
+    }
+
     useEffect(() => {
         // runs incase the user refreshes the page
         const daily = granularity.get("daily")
@@ -31,14 +38,17 @@ const NewCustomers = () => {
         if (daily) {
             dispatch(getNewCustomers({daily: "daily"}))
             setSelectedPeriod("daily")
+            add_class("daily")
         }
         else if (weekly) {
             dispatch(getNewCustomers({weekly: "weekly"}))
             setSelectedPeriod("weekly")
+            add_class("weekly")
         }
         else if (monthly) {
             dispatch(getNewCustomers({monthly: "monthly"}))
             setSelectedPeriod("monthly")
+            add_class("monthly")
         }        
     }, [])
 

@@ -24,6 +24,11 @@ const SalesOverTime = () => {
     // search params
     const [granularity, setGranularity] = useSearchParams();
 
+    function add_class(data_name) {
+        // adds the class btn_active to a granularity button when a user refreshed the page
+        const element = document.querySelector(`[data-name=${data_name}]`);
+        element?.classList?.add("btn_active")
+    }
     useEffect(() => {
         // runs incase the user refreshes the page
         const daily = granularity.get("daily")
@@ -34,18 +39,22 @@ const SalesOverTime = () => {
         if (daily) {
             dispatch(getSales({daily: "daily"}))
             setSelectedPeriod("daily")
+            add_class('daily')
         }
         else if (monthly) {
             dispatch(getSales({monthly: "monthly"}))
             setSelectedPeriod("monthly")
+            add_class("monthly")
         }
         else if (quarterly) {
             dispatch(getSales({quarterly: "quarterly"}))
             setSelectedPeriod("quarterly")
+            add_class("quarterly")
         }
         else if (yearly) {
             dispatch(getSales({yearly: "yearly"}))
             setSelectedPeriod("yearly")
+            add_class("yearly")
         }
     }, [])
 
