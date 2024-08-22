@@ -12,15 +12,17 @@ export const getSales = createAsyncThunk(
                 return {data, period}
             }
             else if (monthly) {
-                const {data} = await axios.get(`/sales/sales_over_time?monthly=true`)
+                const {data, period} = await axios.get(`/sales/sales_over_time?monthly=true`)
+                return {data, period}
             }
             else if (quarterly) {
-                const {data} = await axios.get(`/sales/sales_over_time?quarterly=true`)
+                const {data, period} = await axios.get(`/sales/sales_over_time?quarterly=true`)
+                return {data, period}
             }
             else if (yearly) {
-                const {data} = await axios.get(`/sales/sales_over_time?yearly=true`)
+                const {data, period} = await axios.get(`/sales/sales_over_time?yearly=true`)
+                return {data, period}
             }
-            return data;
         }
         catch(e) {
             console.log(e)
@@ -30,3 +32,4 @@ export const getSales = createAsyncThunk(
         }
     }
 )
+

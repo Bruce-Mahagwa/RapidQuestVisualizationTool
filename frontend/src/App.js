@@ -1,25 +1,18 @@
-import logo from './logo.svg';
+// files
 import './App.css';
+import RepeatCustomers from './Components/RepeatCustomers';
+import SalesOverTime from './Components/SalesOverTime';
+import SalesRate from './Components/SalesRate';
+import NewCustomers from './Components/NewCustomers';
+import CustomerGeography from './Components/CustomerGeography';
+import CustomerCohort from './Components/CustomerCohort';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <main id = "main">
+
+    </main>
+  )
 }
 
 export default App;
