@@ -59,10 +59,26 @@
 }
 
 .graph {
+  margin-top: 1em;
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .intro {
   width: 100%;
   text-align: center;
   margin-top: 2em;
+}
+.loader {
+  width: 100%;
+}
+.loading_container {
+  width: 200px;
+  margin: 1em auto 0 auto;
+  text-align: center;
+}
+.error {
+  width: 400px;
+  margin: 1em auto 0 auto;
+  text-align: center;
 }

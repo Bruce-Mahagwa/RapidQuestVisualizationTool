@@ -16,11 +16,12 @@ const salesSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getSales.fulfilled, (state, action) => {
-            const {data, period} = action.payload;
+            const {data, period} = action.payload.data
             if (period === "daily") {
                 state.total_sales.daily = data;
                 state.total_sales.period = period;
                 state.total_sales.loading = false;
+                console.log(state, "state")
             }
             else if (period === "monthly") {
                 state.total_sales.monthly = data;

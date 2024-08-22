@@ -1,27 +1,53 @@
-// dependencies
+// dependencies 
 import {useSelector, useDispatch} from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {useSearchParams} from "react-router-dom";
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  } from "recharts";
+
+// files
+import Loading from "./Loading";
 
 // actions
 import { getSales } from "../Redux/Actions/salesActions";
 
+
 const SalesOverTime = () => {
     // get state from redux store
     const {total_sales} = useSelector(state => state.sales);
-    const {daily, monthly, quarterly, yearly, loading, error, period} = total_sales;
-    // local state
+    const {loading, error, period} = total_sales;
+    // local state and variables
     const [selectedPeriod, setSelectedPeriod] = useState("none");
+    const [localError, setLocalError] = useState(false);
     const dispatch = useDispatch();
-
+    
     // search params
     const [granularity, setGranularity] = useSearchParams();
 
-                // check if there is a search Param in the url in the case of a reload page
-                // if period is an empty string it means that we have not fetched data from the api
-    const selectedGranularity = granularity.get(period);
+    useEffect(() => {
+        // runs incase the user refreshes the page
+        const daily = granularity.get("daily")
+        const monthly = granularity.get("monthly")
+        const quarterly = granularity.get("quarterly")
+        const yearly = granularity.get("yearly")
 
-    console.log(Array.from(granularity), selectedGranularity, "selectedgranularity")
+        if (daily) {
+            dispatch(getSales({daily: "daily"}))
+            setSelectedPeriod("daily")
+        }
+        else if (monthly) {
+            dispatch(getSales({monthly: "monthly"}))
+            setSelectedPeriod("monthly")
+        }
+        else if (quarterly) {
+            dispatch(getSales({quarterly: "quarterly"}))
+            setSelectedPeriod("quarterly")
+        }
+        else if (yearly) {
+            dispatch(getSales({yearly: "yearly"}))
+            setSelectedPeriod("yearly")
+        }
+    }, [])
 
     const fetchData = (e) => {
         try {
@@ -41,9 +67,7 @@ const SalesOverTime = () => {
             })
             // end of change styles
 
-            // fetch data
-                // set the search params first
-            console.log(Array.from(granularity).length, "length")
+            // set the search params first
             if (Array.from(granularity).length > 1) {
                 let query_obj = {}
                 const graph = granularity.get("graph")
@@ -57,32 +81,62 @@ const SalesOverTime = () => {
                 granularity.set(data_name, "true")
                 setGranularity(granularity)
             }
-            // end of fetch data
+            // end of set search params
 
+
+            // fetch data
+            const is_data_available = total_sales[data_name];
+            if (is_data_available?.length === 0) { 
+                dispatch(getSales({[data_name]: data_name}))
+            }
+            // end of fetch data
         }
         catch(e) {
             console.log(e);
+            setLocalError(true)
         }
     }
-
+    
     return (
         <div className = "visualization">
             <div className = "controls">
                 <button className = "control_btn" data-name = "daily" onClick={fetchData}>Daily</button>
                 <button className = "control_btn" data-name = "monthly" onClick={fetchData}>Monthly</button>
                 <button className = "control_btn" data-name = "quarterly" onClick={fetchData}>Quarterly</button>
-                <button className = "control_btn" data-name = "yearly" onClick={fetchData}>Yearly</button>
+                <button className = "control_btn" data-name = "yearly" onClick={fetchData}>Yearly</button> 
             </div>
-            {selectedPeriod === "none" && <div className = "intro">
+             {selectedPeriod === "none" && <div className = "intro">
           <h2>WELCOME TO THE SALES OVER TIME CATEGORY</h2>
           <h4>To select a visualization period please click on the buttons above</h4>
           <p>This category displays information on the evolution of total sales over different
             granularities listed above.
           </p>
             </div>}
-            <div className = "graph">
 
-            </div>
+            {loading === true && <div className = "loading_container">
+                <Loading />
+            </div>}
+            {error && <div className = "error">
+                <h1>{error}</h1>    
+            </div>}
+            {localError && <div className = "error">
+                <h1>We have encountered a local error. Please reload the Page.</h1>
+            </div>}
+
+
+            {!loading && period && <div className = "graph">
+            
+            <LineChart width={window.innerWidth- 20} height={400} data={total_sales[selectedPeriod]}
+                >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="_id" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey={`total_cost_${selectedPeriod}`} stroke="#8884d8" />
+            </LineChart>
+            </div>}
+
         </div>
     )
 }
