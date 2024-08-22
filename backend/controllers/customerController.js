@@ -115,7 +115,7 @@ const getNewCustomers = async (req, res) => {
                                     }
                                 }
                             },
-                            total_monthly_registration: { $sum: 1}
+                            total_registration_monthly: { $sum: 1}
                         },
                     },
                     {$sort:{"_id.year":1, "_id.month":1}}
@@ -229,11 +229,22 @@ const repeatPurchases = async (req, res) => {
                              count : {$gt: 1}
                         }
                     },
+
+                    {
+                        $group: {
+                            _id: {
+                                month: "$_id.month",
+                                year: "$_id.year"                                
+                            },
+                            count: { $sum: 1 }
+                        }
+                    },
+
                     {
                         $project: {name: "$_id", count: "$count", _id: 0}
                     },
 
-                    {$sort:{"_id.year":1, "_id.month":1}}
+                    {$sort:{"name.year":1, "name.month":1}}
                 ])
 
                 await monthly_repeated_purchases.forEach((item) => {
@@ -274,10 +285,25 @@ const repeatPurchases = async (req, res) => {
                              count : {$gt: 1}
                         }
                     },
+
+                    {
+                        $group: {
+                            _id: {
+                                $dateTrunc: { 
+                                    date: {
+                                        $toDate: "$_id.value"
+                                    }, 
+                                    unit: "quarter" 
+                                },
+                            },
+                            count: { $sum: 1 }
+                        }
+                    },
+
                     {
                         $project: {name: "$_id", count: "$count", _id: 0}
                     }
-                ]).sort({"name.value": 1})
+                ]).sort({"name": 1})
 
                 await quarterly_repeated_purchases.forEach((item) => {
                     data.push(item);
@@ -314,11 +340,21 @@ const repeatPurchases = async (req, res) => {
                              count : {$gt: 1}
                         }
                     },
+
+                    {
+                        $group: {
+                            _id: {                                 
+                                year: "$_id.year"
+                            },
+                            count: { $sum: 1 }
+                        }
+                    },
+
                     {
                         $project: {name: "$_id", count: "$count", _id: 0}
                     },
 
-                    {$sort:{"_id.year":1}}
+                    {$sort:{"name.year":1}}
                 ])
 
                 await yearly_repeated_purchases.forEach((item) => {

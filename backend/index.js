@@ -11,7 +11,9 @@ const app = express();
 const PORT = 4000;
 const whitelist = [
     "https://web.postman.co/",
-    "https://web.postman.co"
+    "https://web.postman.co",
+    "http://localhost:3000/",
+    "http://localhost:3000"
 ];
 
 const corsoptions = {

@@ -40,12 +40,12 @@ const getSalesOverTime = async (req, res) => {
                                 }
                              }
                             },
-                            total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                            total_cost_daily: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
                         },
                     },
                     {$sort:{"_id.year":1, "_id.month":1, "_id.day": 1}}
-                ])
-
+                ]).limit(500);
+// 
                 await daily_price_set.forEach((item) => {
                     data.push(item);
                 })
@@ -76,7 +76,7 @@ const getSalesOverTime = async (req, res) => {
                                     }
                                 }
                                 },
-                                total_cost_month: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}}
+                                total_cost_monthly: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}},
                         },
                     },
                     {$sort:{"_id.year":1, "_id.month":1}}
