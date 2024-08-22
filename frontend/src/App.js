@@ -15,6 +15,15 @@ function App() {
   function changeVisualization(e) {
     const data_name = e.currentTarget.getAttribute("data-name");
     setSelectedTab(data_name);
+    // change styles
+    e.currentTarget.classList.add("btn_active")
+    // remove style from inactive buttons
+    const all_btns = document.querySelectorAll(".main_btn");
+    all_btns.forEach((item) => {
+      if (item.getAttribute("data-name") !== data_name) {
+        item.classList.remove("btn_active");
+      }
+    })
   }
   // end of change tabs
   return (
