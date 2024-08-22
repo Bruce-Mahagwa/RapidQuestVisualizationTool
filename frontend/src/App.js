@@ -1,5 +1,7 @@
-// dependencies
+// dependencies and hooks
 import { useState } from "react";
+import {useSearchParams} from "react-router-dom";
+import axios from "axios";
 // files
 import './App.css';
 import RepeatCustomers from './Components/RepeatCustomers';
@@ -10,11 +12,20 @@ import CustomerGeography from './Components/CustomerGeography';
 import CustomerCohort from './Components/CustomerCohort';
 
 function App() {
-  // change tabs
-  const [selectedTab, setSelectedTab] = useState("none");
+  // defaults
+  axios.defaults.baseURL = "http://localhost:4000"
+
+  // search params
+  const [graph, setGraph] = useSearchParams();
+
+  // check if there is a search Param in the url in the case of a reload page
+  const selectedGraph = graph.get("graph")
+
   function changeVisualization(e) {
+
     const data_name = e.currentTarget.getAttribute("data-name");
-    setSelectedTab(data_name);
+    setGraph({"graph": data_name});
+
     // change styles
     e.currentTarget.classList.add("btn_active")
     // remove style from inactive buttons
@@ -36,17 +47,17 @@ function App() {
           <button className = "main_btn" data-name = "customer_geography" onClick = {changeVisualization}>CustomerGeography</button>
           <button className = "main_btn" data-name = "customer_cohort" onClick = {changeVisualization}>CustomerCohort</button>
       </nav>
-      {selectedTab === "none" && <div className = "intro">
+      {!selectedGraph && <div className = "intro">
           <h2>WELCOME TO MY VISUALIZATION PAGE</h2>
           <p>To select a visualization category please click on the buttons above</p>
       </div>}
       <div className = "visualization_container">
-          {selectedTab === "sales_over_time" && <SalesOverTime />}
-          {selectedTab === "sales_rate" && <SalesRate />}
-          {selectedTab === "new_customers" && <NewCustomers />}
-          {selectedTab === "repeat_customers" && <RepeatCustomers />}
-          {selectedTab === "customer_geography" && <CustomerGeography />}
-          {selectedTab === "customer_cohort" && <CustomerCohort />}
+          {selectedGraph === "sales_over_time" && <SalesOverTime />}
+          {selectedGraph === "sales_rate" && <SalesRate />}
+          {selectedGraph === "new_customers" && <NewCustomers />}
+          {selectedGraph === "repeat_customers" && <RepeatCustomers />}
+          {selectedGraph === "customer_geography" && <CustomerGeography />}
+          {selectedGraph === "customer_cohort" && <CustomerCohort />}
       </div>
     </main>
   )

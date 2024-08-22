@@ -1,6 +1,8 @@
 // dependencies
 import {useSelector, useDispatch} from "react-redux";
 import { useState } from "react";
+import {useSearchParams} from "react-router-dom";
+
 // actions
 import { getSales } from "../Redux/Actions/salesActions";
 
@@ -11,11 +13,22 @@ const SalesOverTime = () => {
     // local state
     const [selectedPeriod, setSelectedPeriod] = useState("none");
     const dispatch = useDispatch();
-    
+
+    // search params
+    const [granularity, setGranularity] = useSearchParams();
+
+                // check if there is a search Param in the url in the case of a reload page
+                // if period is an empty string it means that we have not fetched data from the api
+    const selectedGranularity = granularity.get(period);
+
+    console.log(Array.from(granularity), selectedGranularity, "selectedgranularity")
+
     const fetchData = (e) => {
         try {
-            // change styles
+            // global variables
             const data_name = e.currentTarget.getAttribute("data-name");
+
+            // change styles
             setSelectedPeriod(data_name);
             // change styles
             e.currentTarget.classList.add("btn_active")
@@ -27,6 +40,25 @@ const SalesOverTime = () => {
             }
             })
             // end of change styles
+
+            // fetch data
+                // set the search params first
+            console.log(Array.from(granularity).length, "length")
+            if (Array.from(granularity).length > 1) {
+                let query_obj = {}
+                const graph = granularity.get("graph")
+                query_obj = {
+                    graph: graph,
+                    [data_name]: "true"
+                }
+                setGranularity(query_obj)
+            }
+            else {
+                granularity.set(data_name, "true")
+                setGranularity(granularity)
+            }
+            // end of fetch data
+
         }
         catch(e) {
             console.log(e);
