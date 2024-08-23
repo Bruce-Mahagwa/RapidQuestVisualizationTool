@@ -33,3 +33,18 @@ export const getSales = createAsyncThunk(
     }
 )
 
+export const getSalesRate = createAsyncThunk(
+    'sales/get_sales_rate',
+    async ({}, {rejectWithValue}) => {
+        try {
+            const {data, period} = await axios.get(`/sales/sales_rate`)
+            return {data, period}
+        }   
+        catch(e) {
+            console.log(e)
+            if (e.response.data.error) {
+                return rejectWithValue(e.response.data.error)
+            }
+        }    
+    }
+)

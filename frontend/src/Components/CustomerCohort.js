@@ -38,7 +38,8 @@ const CustomerCohort = () => {
     return (
         <div className = "visualization">
             <div className = "controls">
-            </div> <div className = "intro">
+            </div> 
+            <div className = "intro">
                 <h2>WELCOME TO THE COHORT DISTRIBUTION CATEGORY</h2>          
             </div>
             {loading === true && <div className = "loading_container">

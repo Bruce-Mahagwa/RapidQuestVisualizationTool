@@ -1,11 +1,14 @@
 // dependencies
 import { createSlice } from '@reduxjs/toolkit';
 // functions
-import { getSales } from '../Actions/salesActions';
+import { getSales, getSalesRate } from '../Actions/salesActions';
 // state
 const initialState = {
     total_sales: {
         daily: [], monthly: [], quarterly: [], yearly: [], error: "", period: "", loading: false
+    },
+    sales_rate: {
+        monthly: [], error: "", period: "", loading: false 
     }
 }
 
@@ -69,6 +72,22 @@ const salesSlice = createSlice({
             state.total_sales.loading = false;
         }).addCase(getSales.pending, (state, action) => {
             state.total_sales.loading = true;
+        }).addCase(getSalesRate.fulfilled, (state, action) => {
+            const {data, period} = action.payload.data
+            data.map((item) => {
+                const obj = {
+                    total_cost_monthly: item.total_cost_monthly,
+                    date: `${item._id.year}-${item._id.month}`
+                }
+                state.sales_rate.monthly.push(obj)
+            })
+            state.sales_rate.period = period;
+            state.sales_rate.loading = false;
+        }).addCase(getSalesRate.rejected, (state, action) => {
+            state.sales_rate.loading = false;
+            state.sales_rate.error = action.payload
+        }).addCase(getSalesRate.pending, (state, action) => {
+            state.sales_rate.loading = true;
         })
     }
 })

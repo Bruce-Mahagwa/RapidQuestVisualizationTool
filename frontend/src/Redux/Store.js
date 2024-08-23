@@ -9,6 +9,9 @@ const INITIAL_STATE = {
   sales: {
     total_sales: {
         daily: [], monthly: [], quarterly: [], yearly: [], error: "", period: "", loading: false
+    },
+    sales_rate: {
+      monthly: [], error: "", period: "", loading: false 
     }
   },
   customers: {
