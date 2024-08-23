@@ -131,7 +131,7 @@ const RepeatCustomers = () => {
                 <h1>We have encountered a local error. Please reload the Page.</h1>
             </div>}
 
-            {!loading && period && <div className = "graph">
+            {!loading && period && selectedPeriod !== "none" && <div className = "graph">
                 <BarChart width={1200} height={400} data={repeat_purchases[selectedPeriod]}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />

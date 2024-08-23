@@ -133,7 +133,7 @@ const SalesOverTime = () => {
             </div>}
 
 
-            {!loading && period && <div className = "graph">
+            {!loading && period && selectedPeriod !== "none" &&  <div className = "graph">
             
             <LineChart width={1200} height={400} data={total_sales[selectedPeriod]}
                 >

@@ -20,7 +20,7 @@ const CustomerCohort = () => {
     const fetchData = () => {
         try {
             // fetch data
-            const is_data_available = cohorts.length;
+            const is_data_available = cohorts?.length;
             if (is_data_available === 0) { 
                 dispatch(getCohortValue({}))
             }
@@ -31,7 +31,6 @@ const CustomerCohort = () => {
             setLocalError(true)
         }
     }
-    
     useEffect(() => {
         fetchData();    
     }, [])
@@ -52,10 +51,22 @@ const CustomerCohort = () => {
                 <h1>We have encountered a local error. Please Reload the Page.</h1>
             </div>}
 
-            {!loading && value && <div className = "graph">
+            {!loading && value && <div className = "graph cohort">
                 <CohortGraph 
-                    data = {{
-                        ids: cohorts
+                    data = {
+                        {
+                            ids: cohorts,
+                        }
+                    }
+                    defaultValueType={["value"]}
+                    shadeColor="#87ceeb"
+                    headerFormatter={(obj) => {
+                        if (obj.index && obj.index > 0) {
+                            return `Purchase ${obj.index}`
+                        }
+                        if (obj.isHeader) {
+                            return `Purchase 1`
+                        }
                     }}
                 />
             </div>}

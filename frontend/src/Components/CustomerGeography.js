@@ -41,8 +41,9 @@ const CustomerGeography = () => {
             <div className = "controls">
             </div> <div className = "intro">
                 <h2>WELCOME TO THE GEOGRAPHICAL DISTRIBUTION CATEGORY</h2>          
+                <p>Unfortunately, this visualization is not yet up but our best engineers are working at it. Please be patient. Thank you for understanding.</p>
             </div>
-            {loading === true && <div className = "loading_container">
+            {/* {loading === true && <div className = "loading_container">
                 <Loading />
             </div>}
             {error && <div className = "error">
@@ -50,18 +51,8 @@ const CustomerGeography = () => {
             </div>}
             {localError && <div className = "error">
                 <h1>We have encountered a local error. Please Reload the Page.</h1>
-            </div>}
+            </div>} */}
 
-            {!loading && value && <div className = "graph">
-                {/* <BarChart width={1200} height={400} data={repeat_purchases[selectedPeriod]}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey={`repeat_purchases_${selectedPeriod}`} fill="#8884d8" />
-                </BarChart> */}
-            </div>}
         </div>
     )
 }

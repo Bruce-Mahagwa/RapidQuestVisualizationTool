@@ -6,7 +6,8 @@
 }
 #main {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
+  overflow-x: hidden;
 }
 #main nav {
   width: 100%;
@@ -15,6 +16,10 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1em;
+}
+.visualization {
+  width: 100%;
+  overflow-x: hidden;
 }
 .main_btn {
   width: max-content;
@@ -63,7 +68,9 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  overflow-x: scroll;
 }
+
 .intro {
   width: 100%;
   text-align: center;
