@@ -14,7 +14,7 @@ const initialState = {
     repeat_purchases: {
         daily: [], monthly: [], quarterly: [], yearly: [], error: "", period: "", loading: false
     },
-    get_geographicy: {
+    get_geography: {
         cities: [], value: "", error: "", loading: false
     },
     get_cohort: {
@@ -119,8 +119,17 @@ const customerSlice = createSlice({
         }).addCase(repeatPurchases.rejected, (state, action) => {
             state.repeat_purchases.error = action.payload;
             state.repeat_purchases.loading = false;
-        }).addCase(repeatPurchases.pending, (state, action) => {
+        }).addCase(repeatPurchases.pending, (state) => {
             state.repeat_purchases.loading = true;
+        }).addCase(getGeographicalDistribution.fulfilled, (state, action) => {
+            const {data, value} = action.payload.data
+            state.get_geography.cities = data;
+            state.get_geography.value = value;
+        }).addCase(getGeographicalDistribution.rejected, (state, action) => {
+            state.get_geography.loading = false;
+            state.get_geography.error = action.payload
+        }).addCase(getGeographicalDistribution.pending, (state) => {
+            state.get_geography.loading = true            
         })
     }
 })

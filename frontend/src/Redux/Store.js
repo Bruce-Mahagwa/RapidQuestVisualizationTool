@@ -18,7 +18,7 @@ const INITIAL_STATE = {
     repeat_purchases: {
         daily: [], monthly: [], quarterly: [], yearly: [], error: "", period: "", loading: false
     },
-    get_geographicy: {
+    get_geography: {
         cities: [], value: "", error: "", loading: false
     },
     get_cohort: {

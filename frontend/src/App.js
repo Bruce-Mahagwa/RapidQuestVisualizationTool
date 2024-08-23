@@ -1,5 +1,5 @@
 // dependencies and hooks
-import { useState } from "react";
+import { useEffect } from "react";
 import {useSearchParams} from "react-router-dom";
 import axios from "axios";
 // files
@@ -21,8 +21,15 @@ function App() {
   // check if there is a search Param in the url in the case of a reload page
   const selectedGraph = graph.get("graph")
 
-  function changeVisualization(e) {
+  useEffect(() => {
+    if (selectedGraph) {
+      // adds the class btn_active to a granularity button when a user refreshed the page
+      const element = document.querySelector(`[data-name=${selectedGraph}]`);
+      element?.classList?.add("btn_active")
+    }
+  },  [])
 
+  function changeVisualization(e) {
     const data_name = e.currentTarget.getAttribute("data-name");
     setGraph({"graph": data_name});
 
