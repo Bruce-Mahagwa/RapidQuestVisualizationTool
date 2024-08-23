@@ -68,6 +68,8 @@ const CustomerCohort = () => {
                         if (obj.isHeader) {
                             return `Purchase 1`
                         }
+                        return "Customer Id"
+                        
                     }}
                 />
             </div>}

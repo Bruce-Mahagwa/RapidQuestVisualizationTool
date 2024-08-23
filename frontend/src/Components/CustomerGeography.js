@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import { useState, useEffect } from "react";
 
 // files
-import Loading from "./Loading";
+// import Loading from "./Loading";
 
 // actions
 import { getGeographicalDistribution } from "../Redux/Actions/customerActions";
@@ -11,7 +11,8 @@ import { getGeographicalDistribution } from "../Redux/Actions/customerActions";
 const CustomerGeography = () => {
     // get state from redux store
     const {get_geography} = useSelector(state => state.customers);
-    const {loading, error, value, cities} = get_geography;
+    // const {loading, error, value, cities} = get_geography;
+    const {cities} = get_geography;
 
     // local state and variables
     const [localError, setLocalError] = useState(false);
@@ -49,9 +50,10 @@ const CustomerGeography = () => {
             {error && <div className = "error">
                 <h1>`${error}. Please Reload the Page`</h1>        
             </div>}
-            {localError && <div className = "error">
+         */}
+             {localError && <div className = "error">
                 <h1>We have encountered a local error. Please Reload the Page.</h1>
-            </div>} */}
+            </div>}
 
         </div>
     )

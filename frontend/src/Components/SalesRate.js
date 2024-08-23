@@ -1,7 +1,7 @@
 // dependencies 
 import {useSelector, useDispatch} from "react-redux";
 import { useState, useEffect } from "react";
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+import {Bar, Area, ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   } from "recharts";
 
 // files
@@ -61,7 +61,7 @@ const SalesRate = () => {
 
             {!loading && period && <div className = "graph">
             
-                <LineChart width={1200} height={400} data={monthly}
+                {/* <LineChart width={1200} height={400} data={monthly}
                     >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
@@ -69,9 +69,20 @@ const SalesRate = () => {
                     <Tooltip />
                     <Legend />
                     <Line type="monotone" dataKey={`total_cost_monthly`} stroke="#8884d8" />
-                </LineChart>
+                </LineChart> */}
+                <ComposedChart width={1200} height={400} data={monthly}
+                    >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Area type="monotone" dataKey="total_cost_monthly" fill="#8884d8" stroke="#8884d8" />
+                    <Bar dataKey="total_cost_monthly" barSize={20} fill="#413ea0" />
+                    <Line type="monotone" dataKey={`total_cost_monthly`} stroke="#8884d8" />
+                </ComposedChart>
             </div>}
         </div>
     )
 }
-export default SalesOverTime
+export default SalesRate

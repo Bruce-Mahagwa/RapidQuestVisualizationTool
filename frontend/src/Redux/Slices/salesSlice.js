@@ -21,7 +21,7 @@ const salesSlice = createSlice({
         builder.addCase(getSales.fulfilled, (state, action) => {
             const {data, period} = action.payload.data
             if (period === "daily") {
-                data.map((item) => {
+                data.forEach((item) => {
                     const obj = {
                         total_cost_daily: item.total_cost_daily,
                         date: `${item._id.year}-${item._id.month}-${item._id.day}`
@@ -32,7 +32,7 @@ const salesSlice = createSlice({
                 state.total_sales.loading = false;
             }
             else if (period === "monthly") {
-                data.map((item) => {
+                data.forEach((item) => {
                     const obj = {
                         total_cost_monthly: item.total_cost_monthly,
                         date: `${item._id.year}-${item._id.month}`
@@ -43,7 +43,7 @@ const salesSlice = createSlice({
                 state.total_sales.loading = false;
             }
             else if (period === "quarterly") {
-                data.map((item) => {
+                data.forEach((item) => {
                     const date = new Date(item._id);
                     const year = date.getFullYear();
                     const month = date.getMonth();
@@ -57,7 +57,7 @@ const salesSlice = createSlice({
                 state.total_sales.loading = false;
             }
             else if (period === 'yearly') {
-                data.map((item) => {
+                data.forEach((item) => {
                     const obj = {
                         total_cost_yearly: item.total_cost_yearly,
                         date: `${item._id.year}`
@@ -74,7 +74,7 @@ const salesSlice = createSlice({
             state.total_sales.loading = true;
         }).addCase(getSalesRate.fulfilled, (state, action) => {
             const {data, period} = action.payload.data
-            data.map((item) => {
+            data.forEach((item) => {
                 const obj = {
                     total_cost_monthly: item.total_cost_monthly,
                     date: `${item._id.year}-${item._id.month}`
