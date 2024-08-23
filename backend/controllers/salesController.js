@@ -52,7 +52,7 @@ const getSalesOverTime = async (req, res) => {
             }
             catch(e) {
                 console.log(e)
-                return res.status(500).json({error: "Could not retrieve data for daily sales"})
+                return res.status(500).json({error: "Could not retrieve data for daily sales. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
 
@@ -88,7 +88,7 @@ const getSalesOverTime = async (req, res) => {
             }
             catch(e) {
                 console.log(e)
-                return res.status(500).json({error: "Could not retrieve data for monthly sales"})
+                return res.status(500).json({error: "Could not retrieve data for monthly sales. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
 
@@ -111,7 +111,7 @@ const getSalesOverTime = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Could not retrieve data for quarterly sales"})
+                return res.status(500).json({error: "Could not retrieve data for quarterly sales. Vercel sometimes has data fetching issues. Please reload the page"})
             }    
         }
         // yearly interval
@@ -140,7 +140,7 @@ const getSalesOverTime = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Could not retrieve data for yearly sales"})
+                return res.status(500).json({error: "Could not retrieve data for yearly sales. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
         return res.status(200).json({data, period: "NO PERIOD SPECIFIED"})
@@ -188,12 +188,12 @@ const salesRate = async (req, res) => {
         }
         catch(e) {
             console.log(e)
-            return res.status(500).json({error: "Could not retrieve data for monthly sales growth rate"})
+            return res.status(500).json({error: "Could not retrieve data for monthly sales growth rate. Vercel sometimes has data fetching issues. Please reload the page"})
         }
     }
     catch(e) {
         console.log(e);
-        return res.status(500).json({error: "Cannot calculate sales growth rate"})
+        return res.status(500).json({error: "Cannot calculate sales growth rate. Vercel sometimes has data fetching issues. Please reload the page."})
     }
 }
 module.exports = {getSalesOverTime, salesRate}

@@ -51,7 +51,7 @@ const getNewCustomers = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Could not retrieve daily customer registration data"})
+                return res.status(500).json({error: "Could not retrieve daily customer registration data. Vercel sometimes has data fetching issues. Please reload the page."})
             }
         }
 
@@ -92,7 +92,7 @@ const getNewCustomers = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Could not retrieve weekly customer registration data"})
+                return res.status(500).json({error: "Could not retrieve weekly customer registration data. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
 
@@ -128,7 +128,7 @@ const getNewCustomers = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Could not retrieve monthly customer registration data"})
+                return res.status(500).json({error: "Could not retrieve monthly customer registration data. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
 
@@ -136,7 +136,7 @@ const getNewCustomers = async (req, res) => {
     }
     catch(e) {
         console.log(e);
-        return res.status(500).json({error: "Cannot get new customer data now."})
+        return res.status(500).json({error: "Cannot get new customer data now. Vercel sometimes has data fetching issues. Please reload the page"})
     }
 }
 
@@ -196,7 +196,7 @@ const repeatPurchases = async (req, res) => {
         }
         catch(e) {
             console.log(e);
-            return res.status(500).json({error: "Cannot retrieve daily repeated purchases"})
+            return res.status(500).json({error: "Cannot retrieve daily repeated purchases. Vercel sometimes has data fetching issues. Please reload the page"})
         }
     }
 
@@ -254,7 +254,7 @@ const repeatPurchases = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Cannot retrieve monthly repeated purchases"})
+                return res.status(500).json({error: "Cannot retrieve monthly repeated purchases. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         } 
 
@@ -312,7 +312,7 @@ const repeatPurchases = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Cannot retrieve quarterly repeated purchases"})
+                return res.status(500).json({error: "Cannot retrieve quarterly repeated purchases. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
 
@@ -364,14 +364,14 @@ const repeatPurchases = async (req, res) => {
             }
             catch(e) {
                 console.log(e);
-                return res.status(500).json({error: "Cannot retrieve yearly repeated purchases"})
+                return res.status(500).json({error: "Cannot retrieve yearly repeated purchases. Vercel sometimes has data fetching issues. Please reload the page"})
             }
         }
         return data;
     }
     catch(e) {
         console.log(e);
-        return res.status(500).json({error: "Cannot retrieve customers with repeat purchases now"})
+        return res.status(500).json({error: "Cannot retrieve customers with repeat purchases now. Vercel sometimes has data fetching issues. Please reload the page"})
     }
 }
 
@@ -453,7 +453,7 @@ const cohortValue = async (req, res) => {
     }
     catch(e) {
         console.log(e);
-        return res.status(500).json({error: "Cannot group customers by cohort"})
+        return res.status(500).json({error: "Cannot group customers by cohort. Vercel sometimes has data fetching issues. Please reload the page"})
     }
 }
 
