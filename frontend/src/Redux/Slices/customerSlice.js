@@ -5,6 +5,7 @@ import { getGeographicalDistribution } from '../Actions/customerActions';
 import { getCohortValue } from '../Actions/customerActions';
 import { repeatPurchases } from '../Actions/customerActions';
 import { getNewCustomers } from '../Actions/customerActions';
+import { act } from 'react';
 
 // state
 const initialState = {
@@ -18,7 +19,7 @@ const initialState = {
         cities: [], value: "", error: "", loading: false
     },
     get_cohort: {
-        cohorts: [], error: "", loading: false
+        cohorts: [], error: "", loading: false, value: ""
     }
 }
 
@@ -130,6 +131,16 @@ const customerSlice = createSlice({
             state.get_geography.error = action.payload
         }).addCase(getGeographicalDistribution.pending, (state) => {
             state.get_geography.loading = true            
+        }).addCase(getCohortValue.fulfilled, (state, action) => {
+            const {data, value} = action.payload.data
+            state.get_cohort.cohorts = data;
+            state.get_cohort.loading = false;
+            state.get_cohort.value = value;
+        }).addCase(getCohortValue.rejected, (state, action) => {
+            state.get_cohort.loading = false;
+            state.get_cohort.error = action.payload;
+        }).addCase(getCohortValue.pending, (state) => {
+            state.get_cohort.loading = true;
         })
     }
 })

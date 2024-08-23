@@ -127,7 +127,7 @@ const NewCustomers = () => {
 
             {!loading && period && <div className = "graph">
             
-            <LineChart width={1000} height={400} data={new_customers[selectedPeriod]}
+            <LineChart width={1200} height={400} data={new_customers[selectedPeriod]}
                 >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />

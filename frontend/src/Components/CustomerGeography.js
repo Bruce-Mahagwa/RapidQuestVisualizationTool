@@ -1,7 +1,6 @@
 // dependencies 
 import {useSelector, useDispatch} from "react-redux";
 import { useState, useEffect } from "react";
-import {useSearchParams} from "react-router-dom";
 
 // files
 import Loading from "./Loading";
@@ -13,16 +12,17 @@ const CustomerGeography = () => {
     // get state from redux store
     const {get_geography} = useSelector(state => state.customers);
     const {loading, error, value, cities} = get_geography;
+
     // local state and variables
     const [localError, setLocalError] = useState(false);
     const dispatch = useDispatch();
     
-    const fetchData = (e) => {
+    const fetchData = () => {
         try {
             // fetch data
             const is_data_available = cities.length;
             if (is_data_available === 0) { 
-                dispatch(getGeographicalDistribution())
+                dispatch(getGeographicalDistribution({}))
             }
             // end of fetch data
         }
@@ -53,14 +53,14 @@ const CustomerGeography = () => {
             </div>}
 
             {!loading && value && <div className = "graph">
-                <BarChart width={1200} height={400} data={repeat_purchases[selectedPeriod]}>
+                {/* <BarChart width={1200} height={400} data={repeat_purchases[selectedPeriod]}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
                     <Bar dataKey={`repeat_purchases_${selectedPeriod}`} fill="#8884d8" />
-                </BarChart>
+                </BarChart> */}
             </div>}
         </div>
     )

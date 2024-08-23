@@ -135,7 +135,7 @@ const SalesOverTime = () => {
 
             {!loading && period && <div className = "graph">
             
-            <LineChart width={1000} height={400} data={total_sales[selectedPeriod]}
+            <LineChart width={1200} height={400} data={total_sales[selectedPeriod]}
                 >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
