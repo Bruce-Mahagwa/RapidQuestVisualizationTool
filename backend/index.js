@@ -10,10 +10,12 @@ const apiRoutes = require("./routes/apiRoutes");
 const app = express();
 const PORT = 4000;
 const whitelist = [
-    "https://web.postman.co/",
-    "https://web.postman.co",
-    "http://localhost:3000/",
-    "http://localhost:3000"
+    // "https://web.postman.co/",
+    // "https://web.postman.co",
+    // "http://localhost:3000/",
+    // "http://localhost:3000"
+    "https://rapid-quest-visualization-tool-frontend.vercel.app/",
+    "https://rapid-quest-visualization-tool-frontend.vercel.app"
 ];
 
 const corsoptions = {
