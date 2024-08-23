@@ -125,7 +125,7 @@ const RepeatCustomers = () => {
                 <Loading />
             </div>}
             {error && <div className = "error">
-                <h1>`${error}. Please reload page`</h1>        
+                <h1>`${error}. Please reload page. Vercel sometimes has data fetching issues.`</h1>        
             </div>}
             {localError && <div className = "error">
                 <h1>We have encountered a local error. Please reload the Page.</h1>

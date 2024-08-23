@@ -49,7 +49,7 @@ const CustomerCohort = () => {
                 <h1>`${error}. Please Reload the Page`</h1>        
             </div>}
             {localError && <div className = "error">
-                <h1>We have encountered a local error. Please Reload the Page.</h1>
+                <h1>We have encountered a local error. Please Reload the Page. Vercel sometimes has data fetching issues.</h1>
             </div>}
 
             {!loading && value && <div className = "graph cohort">
