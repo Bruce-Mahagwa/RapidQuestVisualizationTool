@@ -151,5 +151,50 @@ const getSalesOverTime = async (req, res) => {
         return res.status(500).json({error: "We have encountered an internal error. Please reload the page."})
     }
 }
+const salesRate = async (req, res) => {
+    try {
+        await client.connect();
+        const database = client.db("RQ_Analytics")
+        const collection = database.collection("shopifyOrders");
 
-module.exports = {getSalesOverTime}
+        const data = [];
+
+    // monthly interval
+        try {
+            const monthly_price_set = await collection.aggregate([
+                {
+                    $group: {
+                        _id: { 
+                            month: { 
+                                $month: {
+                                    $toDate: "$created_at"
+                                }
+                            },
+                            year: {
+                                $year: {
+                                    $toDate: "$created_at"
+                                }
+                            }
+                            },
+                            total_cost_monthly: { $sum: {$toDouble: "$total_price_set.shop_money.amount"}},
+                    },
+                },
+                {$sort:{"_id.year":1, "_id.month":1}}
+            ])
+
+            await monthly_price_set.forEach((item) => {
+                data.push(item);
+            })
+            return res.status(200).json({data, period: "monthly"})
+        }
+        catch(e) {
+            console.log(e)
+            return res.status(500).json({error: "Could not retrieve data for monthly sales growth rate"})
+        }
+    }
+    catch(e) {
+        console.log(e);
+        return res.status(500).json({error: "Cannot calculate sales growth rate"})
+    }
+}
+module.exports = {getSalesOverTime, salesRate}

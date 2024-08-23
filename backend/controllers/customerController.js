@@ -383,7 +383,7 @@ const getGeographicalDistribution = async (req, res) => {
         // get cities of customers
         const data = [];
         const options = {
-            projection: {"customer.default_address.city": 1, _id: 0} 
+            projection: {"customer.default_address.city": 1, "customer.default_address.province":1, _id: 0} 
         }
         try {
             const cities = await collection.find({}, options)
@@ -418,41 +418,44 @@ const cohortValue = async (req, res) => {
         const customer_ids = await collection.find({}).project(options).sort({"created_at": 1})
 
         await customer_ids.forEach((item) => {
-            const product_long_id = String(new Long(item._id.low, item._id.high, item._id.unsigned));
+            // const product_long_id = String(new Long(item._id.low, item._id.high, item._id.unsigned));
             const customer_long_id = String(new Long(item.customer.id.low, item.customer.id.high, item.customer.id.unsigned));
-            const date_created =  item.created_at
-            const date_created_string = date_created.toString()
-            const month_created =  new Date(item.created_at).getMonth()
+            // const date_created =  item.created_at
+            // const date_created_string = date_created.toString()
+            // const month_created =  new Date(item.created_at).getMonth()
             const price_of_product =  Number(item.total_price_set.shop_money.amount)
             
             if (data_obj[customer_long_id]) {
-                data_obj[customer_long_id][date_created_string] = {
-                    product_long_id: product_long_id,
-                    customer_long_id: customer_long_id,
-                    date_created: date_created,
-                    month_created: month_created,
-                    price_of_product: price_of_product
-                }
+                // data_obj[customer_long_id][date_created_string] = {
+                //     product_long_id: product_long_id,
+                //     customer_long_id: customer_long_id,
+                //     date_created: date_created,
+                //     month_created: month_created,
+                //     price_of_product: price_of_product
+                // }
+                data_obj[customer_long_id].push(price_of_product);
             }
             else {
-                data_obj[customer_long_id] = {
-                    [date_created_string]: {
-                        product_long_id: product_long_id,
-                        customer_long_id: customer_long_id,
-                        date_created: date_created,
-                        month_created: month_created,
-                        price_of_product: price_of_product
-                    }
-                }
+                // data_obj[customer_long_id] = {
+                //     [date_created_string]: {
+                //         product_long_id: product_long_id,
+                //         customer_long_id: customer_long_id,
+                //         date_created: date_created,
+                //         month_created: month_created,
+                //         price_of_product: price_of_product
+                //     }
+                // }
+                data_obj[customer_long_id] = [price_of_product];
             }
             
         })
-        return res.status(200).json({ data: data_obj})
+        return res.status(200).json({ data: data_obj, value: "cohorts"})
     }
     catch(e) {
         console.log(e);
         return res.status(500).json({error: "Cannot group customers by cohort"})
     }
 }
+
 module.exports = {getNewCustomers, repeatPurchases, getGeographicalDistribution, cohortValue}
  
