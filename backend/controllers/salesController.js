@@ -1,8 +1,7 @@
 // dependencies
 const { MongoClient } = require("mongodb");
 // variables
-const MONGO_URI = "mongodb+srv://db_user_read:LdmrVA5EDEv4z3Wr@cluster0.n10ox.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
+const MONGO_URI = process.env.MONGO_URI;
 const client = new MongoClient(MONGO_URI);
 
 const getSalesOverTime = async (req, res) => {

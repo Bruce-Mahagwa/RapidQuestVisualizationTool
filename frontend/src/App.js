@@ -13,7 +13,7 @@ import CustomerCohort from './Components/CustomerCohort';
 
 function App() {
   // defaults
-  axios.defaults.baseURL = "http://localhost:4000"
+  axios.defaults.baseURL = "https://rapid-quest-visualization-tool-backend.vercel.app"
 
   // search params
   const [graph, setGraph] = useSearchParams();
